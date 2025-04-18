@@ -1,0 +1,120 @@
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from "@/components/ui/textarea"
+
+import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
+import AppLayout from '@/layouts/app-layout';
+import { type BreadcrumbItem } from '@/types';
+import { Head, Link, useForm } from '@inertiajs/react';
+import { ArrowLeftIcon } from 'lucide-react';
+import React from 'react';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Dashboard',
+        href: '/dashboard',
+    },
+    {
+        title: 'Contacts',
+        href: '/contacts',
+    },
+    {
+        title: 'Edit',
+        href: '/contacts/edit',
+    },
+];
+
+export default function EditContact({ contact }: { contact: any }) {
+    const { data, setData, put, processing, errors } = useForm({
+        name: contact.name,
+        email: contact.email,
+        mobile: contact.mobile,
+        address: contact.address,
+    });
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        put(`/contacts/${contact.id}`);
+    }
+
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Edit Contact" />
+            <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
+                <Card>
+                    <CardHeader>
+                        <div className='flex justify-between items-center'>
+                            <CardTitle>Edit Contact</CardTitle>
+                            <Link href='/contacts'>
+                                <Button variant='outline'>
+                                    <ArrowLeftIcon className='w-4 h-4' />
+                                    Back
+                                </Button>
+                            </Link>
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                        <form onSubmit={handleSubmit} className='space-y-4'>
+                            <div>
+                                <Label htmlFor='name'>Name<span className='text-red-500'>*</span></Label>
+                                <Input
+                                    id='name'
+                                    name='name'
+                                    type='text'
+                                    placeholder='Enter name'
+                                    value={data.name}
+                                    onChange={(e) => setData('name', e.target.value)}
+                                    required
+                                />
+                                {errors.name && <p className='text-red-500'>{errors.name}</p>}
+                            </div>
+                            <div className='grid grid-cols-2 gap-4'>
+                                <div>
+                                    <Label htmlFor='email'>Email</Label>
+                                    <Input
+                                        id='email'
+                                        name='email'
+                                        type='email'
+                                        placeholder='Enter email'
+                                        value={data.email}
+                                        onChange={(e) => setData('email', e.target.value)}
+                                    />
+                                    {errors.email && <p className='text-red-500'>{errors.email}</p>}
+                                </div>
+                                <div>
+                                    <Label htmlFor='mobile'>Mobile<span className='text-red-500'>*</span></Label>
+                                    <Input
+                                        id='mobile'
+                                        name='mobile'
+                                        type='mobile'
+                                        placeholder='Enter mobile'
+                                        value={data.mobile}
+                                        onChange={(e) => setData('mobile', e.target.value)}
+                                        required
+                                    />
+                                    {errors.mobile && <p className='text-red-500'>{errors.mobile}</p>}
+                                </div>
+                            </div>
+                            <div>
+                                <Label htmlFor='address'>Address</Label>
+                                <Textarea
+                                    id='address'
+                                    name='address'
+                                    placeholder='Enter address'
+                                    value={data.address}
+                                    onChange={(e) => setData('address', e.target.value)}
+                                />
+                                {errors.address && <p className='text-red-500'>{errors.address}</p>}
+                            </div>
+                            <Button type='submit' disabled={processing}>
+                                {processing ? 'Saving...' : 'Save'}
+                            </Button>
+                        </form>
+                    </CardContent>
+                </Card>
+            </div>
+        </AppLayout>
+    );
+}

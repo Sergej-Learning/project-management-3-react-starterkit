@@ -11,9 +11,14 @@ class ContactController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('contacts/index');
+        $contacts = Contact::query();
+        if ($request->user()->role == 'user') {
+            $contacts = $contacts->where('user_id', $request->user()->id);
+        }
+        $contacts = $contacts->get();
+        return Inertia::render('contacts/index', ['contacts' => $contacts]);
     }
 
     /**
@@ -21,7 +26,7 @@ class ContactController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('contacts/create');
     }
 
     /**
@@ -29,7 +34,16 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'email' => 'nullable|email|unique:contacts,email',
+            'mobile' => 'required|regex:/^\+?[0-9\s\-\(\)]+$/|unique:contacts,mobile',
+            'address' => 'nullable',
+        ]);
+        $validatedData['user_id'] = $request->user()->id;
+        Contact::create($validatedData);
+
+        return redirect()->route('contacts.index')->with('Success', 'Contact created successfully');
     }
 
     /**
@@ -45,7 +59,9 @@ class ContactController extends Controller
      */
     public function edit(Contact $contact)
     {
-        //
+        return Inertia::render('contacts/edit', [
+            'contact' => $contact,
+        ]);
     }
 
     /**
@@ -53,7 +69,15 @@ class ContactController extends Controller
      */
     public function update(Request $request, Contact $contact)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'email' => 'nullable|email|unique:contacts,email,' . $contact->id,
+            'mobile' => 'required|regex:/^\+?[0-9\s\-\(\)]+$/|unique:contacts,mobile,' . $contact->id,
+            'address' => 'nullable',
+        ]);
+        $contact->update($validatedData);
+
+        return redirect()->route('contacts.index')->with('success', 'Contact updated successfully.');
     }
 
     /**
@@ -61,6 +85,8 @@ class ContactController extends Controller
      */
     public function destroy(Contact $contact)
     {
-        //
+        $contact->delete();
+
+        return redirect()->route('contacts.index')->with('success', 'Contact deleted successfully.');
     }
 }
