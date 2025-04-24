@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Contact;
+use App\Models\Project;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -49,7 +50,11 @@ class HandleInertiaRequests extends Middleware
                     'contacts' => [
                         'viewAny' => $request->user()?->can('viewAny', Contact::class),
                         'create' => $request->user()?->can('create', Contact::class),
-                    ]
+                    ],
+                    'projects' => [
+                        'viewAny' => $request->user()?->can('viewAny', Project::class),
+                        'create' => $request->user()?->can('create', Project::class),
+                    ],
                 ]
 
             ],

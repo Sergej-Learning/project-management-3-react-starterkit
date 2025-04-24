@@ -11,11 +11,9 @@ import { useInitials } from '@/hooks/use-initials';
 import { cn } from '@/lib/utils';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Menu, Search, Users } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, ListOrdered, Menu, Search, Users } from 'lucide-react';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
-
-
 
 const rightNavItems: NavItem[] = [
     {
@@ -47,11 +45,24 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
             href: '/dashboard',
             icon: LayoutGrid,
         },
-        ...(auth.can.contacts.viewAny ? [{
-            title: 'Contacts',
-            href: '/contacts',
-            icon: Users,
-        }] : []),
+        ...(auth.can.contacts.viewAny
+            ? [
+                  {
+                      title: 'Contacts',
+                      href: '/contacts',
+                      icon: Users,
+                  },
+              ]
+            : []),
+        ...(auth.can.projects.viewAny
+            ? [
+                  {
+                      title: 'Projects',
+                      href: '/projects',
+                      icon: ListOrdered,
+                  },
+              ]
+            : []),
     ];
 
     return (
