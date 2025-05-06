@@ -21,7 +21,10 @@ class ContactPolicy
      */
     public function view(User $user, Contact $contact): bool
     {
-        return false;
+        if ($user->role === 'admin') {
+            return true;
+        }
+        return $contact->user_id === $user->id;
     }
 
     /**

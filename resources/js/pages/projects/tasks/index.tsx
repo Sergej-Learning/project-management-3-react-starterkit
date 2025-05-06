@@ -26,8 +26,12 @@ const breadcrumbs: BreadcrumbItem[] = [
         title: 'Projects',
         href: '/projects',
     },
+    {
+        title: 'Tasks',
+        href: '/tasks',
+    },
 ];
-interface Project {
+interface Task {
     id: number;
     name: string;
     description: string;
@@ -42,29 +46,29 @@ interface Project {
     };
 }
 
-export default function Projects({ projects, auth }: { projects: { data: Project[] }; auth: any }) {
+export default function Tasks({ tasks, auth }: { tasks: { data: Task[] }; auth: any }) {
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-    const [deleteProjectId, setDeleteProjectId] = useState<number | null>(null);
+    const [deleteTaskId, setDeleteTaskId] = useState<number | null>(null);
     const handleDelete = (id: number) => {
         setDeleteDialogOpen(true);
-        setDeleteProjectId(id);
+        setDeleteTaskId(id);
     };
     const handleConfirmDelete = () => {
-        router.delete(`/projects/${deleteProjectId}`);
+        router.delete(`/tasks/${deleteTaskId}`);
         setDeleteDialogOpen(false);
     };
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Projects" />
+            <Head title="Tasks" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <div className="flex items-center justify-between">
-                    <h1 className="font bold text-2xl">Projects</h1>
+                    <h1 className="font bold text-2xl">Tasks</h1>
 
-                    {auth.can.projects.create && (
-                        <Link href="projects/create">
+                    {auth.can.tasks.create && (
+                        <Link href="tasks/create">
                             <Button>
                                 <PlusIcon className="h-4 w-4" />
-                                Add new Project
+                                Add new Task
                             </Button>
                         </Link>
                     )}
@@ -72,12 +76,12 @@ export default function Projects({ projects, auth }: { projects: { data: Project
                 <div className="flex flex-col gap-4">
                     <Card>
                         <CardHeader>
-                            <CardTitle>All Projects</CardTitle>
+                            <CardTitle>All tasks</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="flex flex-col gap-4">
                                 <Table>
-                                    <TableCaption>Listing of ALL projects</TableCaption>
+                                    <TableCaption>Listing of ALL tasks</TableCaption>
                                     <TableHeader>
                                         <TableRow>
                                             <TableHead className="w-[100px]">ID</TableHead>
@@ -91,31 +95,29 @@ export default function Projects({ projects, auth }: { projects: { data: Project
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {projects.data.map((project) => (
-                                            <TableRow key={project.id}>
-                                                <TableCell className="font-medium">{project.id}</TableCell>
+                                        {tasks.data.map((task) => (
+                                            <TableRow key={task.id}>
                                                 <TableCell>
-                                                    <Link href={`/projects/${project.id}`} className="hover:underline">
-                                                        {project.name}
+                                                    <Link href={`/tasks/${task.id}`} className="text-blue-500 hover:underline">
+                                                        {task.name}
                                                     </Link>
                                                 </TableCell>
-                                                <TableCell>{project.description}</TableCell>
-                                                <TableCell>{project.start_date}</TableCell>
-                                                <TableCell>{project.due_date}</TableCell>
-                                                <TableCell>{project.status}</TableCell>
-                                                <TableCell>{project.priority}</TableCell>
-                                                <TableCell>{project.progress}</TableCell>
-
+                                                <TableCell>{task.description}</TableCell>
+                                                <TableCell>{task.start_date}</TableCell>
+                                                <TableCell>{task.due_date}</TableCell>
+                                                <TableCell>{task.status}</TableCell>
+                                                <TableCell>{task.priority}</TableCell>
+                                                <TableCell>{task.progress}</TableCell>
                                                 <TableCell>
-                                                    {project.can.update && (
-                                                        <Link href={`/projects/${project.id}/edit`}>
+                                                    {task.can.update && (
+                                                        <Link href={`/tasks/${task.id}/edit`}>
                                                             <Button variant="outline">
                                                                 <EditIcon className="h-4 w-4" />
                                                             </Button>
                                                         </Link>
                                                     )}
-                                                    {project.can.delete && (
-                                                        <Button variant="outline" onClick={() => handleDelete(project.id)}>
+                                                    {task.can.delete && (
+                                                        <Button variant="outline" onClick={() => handleDelete(task.id)}>
                                                             <TrashIcon className="h-4 w-4" />
                                                         </Button>
                                                     )}
@@ -133,7 +135,7 @@ export default function Projects({ projects, auth }: { projects: { data: Project
                         <AlertDialogHeader>
                             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                             <AlertDialogDescription>
-                                This action cannot be undone. This will permanently delete your Project and remove your data from our servers.
+                                This action cannot be undone. This will permanently delete your Task and remove your data from our servers.
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>

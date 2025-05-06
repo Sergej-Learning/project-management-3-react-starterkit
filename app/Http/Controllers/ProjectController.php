@@ -65,9 +65,17 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Project $project)
+    public function show(Request $request,Project $project)
     {
-        //
+        if ($request->user()->cannot('view', $project)){
+            abort (403);
+        }
+        $tasks = $project->tasks()->get();
+
+        return Inertia::render('projects/show', [
+            'project' => $project,
+            'tasks' => $tasks,
+        ]);
     }
 
     /**

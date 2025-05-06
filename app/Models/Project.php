@@ -19,4 +19,18 @@ class Project extends Model
         'priority',
         'progress',
     ];
+    protected $casts = [
+        // 'start_date' => 'date',
+        // 'due_date' => 'date',
+        'status' => 'string',
+        'priority' => 'string',
+    ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
 }

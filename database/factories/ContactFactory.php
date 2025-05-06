@@ -20,7 +20,7 @@ class ContactFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => rand(1, 2),
+            'user_id' => rand(1, 3),
             'name' => fake()->name(),
             'email' => fake()->email(),
             'mobile' => fake()->phoneNumber(),

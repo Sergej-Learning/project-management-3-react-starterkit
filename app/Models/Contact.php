@@ -15,4 +15,21 @@ class Contact extends Model
         'mobile',
         'address',
     ];
+    protected $casts = [
+        'email' => 'string',
+        'mobile' => 'string',
+        'address' => 'string',
+    ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
+    }
 }

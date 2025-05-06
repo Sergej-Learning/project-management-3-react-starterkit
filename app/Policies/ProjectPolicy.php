@@ -13,7 +13,7 @@ class ProjectPolicy
      */
     public function viewAny(User $user): bool
     {
-        return in_array($user->role, ['admin', 'user']);
+        return in_array($user->role, ['admin','user','projectmanager']);
     }
 
     /**
@@ -21,7 +21,7 @@ class ProjectPolicy
      */
     public function view(User $user, Project $project): bool
     {
-        return false;
+        return in_array($user->role, ['admin','user','projectmanager']);
     }
 
     /**
@@ -29,7 +29,7 @@ class ProjectPolicy
      */
     public function create(User $user): bool
     {
-        return in_array($user->role, ['admin', 'user']);
+        return in_array($user->role, ['admin','projectmanager']);
     }
 
     /**
@@ -37,7 +37,7 @@ class ProjectPolicy
      */
     public function update(User $user, Project $project): bool
     {
-        if ($user->role == 'admin') {
+        if ($user->role == 'admin'||$user->role=='projectmanager') {
             return true;
         }
         return $project->user_id == $user->id;
@@ -48,7 +48,7 @@ class ProjectPolicy
      */
     public function delete(User $user, Project $project): bool
     {
-        if ($user->role == 'admin') {
+        if ($user->role == 'admin'||$user->role =='projectmanager') {
             return true;
         }
         return $project->user_id == $user->id;

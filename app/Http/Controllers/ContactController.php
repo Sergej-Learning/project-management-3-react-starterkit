@@ -23,8 +23,9 @@ class ContactController extends Controller
         }
         $contacts = $contacts->get();
 
+        // Ensure the contacts data is properly formatted before passing to the DataTable.
         return Inertia::render('contacts/index', [
-            'contacts' => ContactResource::collection($contacts),
+            'contacts' => ContactResource::collection($contacts)->resolve(),
         ]);
     }
 
